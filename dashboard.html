@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SC - Dashboard</title>
+  <style>
+    :root{
+      --accent:#1b8b3b;
+      --blue:#0b6cff;
+      --sidebarW:260px;
+      --text:#222;
+    }
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      height:100%;
+      font-family:Arial, sans-serif;
+      background:#fff;
+      color:var(--text);
+    }
+    .topbar{
+      height:56px;
+      border-bottom:1px solid #eee;
+      padding:0 16px;
+      display:flex;
+      align-items:center;
+      background:#fff;
+    }
+    .hambtn{
+      background:none;
+      border:none;
+      font-size:22px;
+      cursor:pointer;
+      margin-right:10px;
+    }
+    .brand{font-size:18px;font-weight:700}
+    .layout{
+      display:flex;
+      height:calc(100vh - 56px);
+    }
+
+    /* sidebar */
+    .sidebar{
+      width:var(--sidebarW);
+      background:#fafafa;
+      border-right:1px solid #eee;
+      padding:12px;
+      transition:.25s;
+    }
+    .sidebar.hidden{
+      transform:translateX(-110%);
+      position:absolute;
+      top:56px;
+      left:0;
+      height:calc(100vh - 56px);
+      box-shadow:8px 0 25px rgba(0,0,0,0.1);
+      z-index:20;
+    }
+    .heading{font-weight:700;margin-bottom:10px}
+    .menu-list{list-style:none;margin:0;padding:0}
+    .menu-list li{
+      padding:10px;
+      border-radius:6px;
+      margin-bottom:6px;
+      font-size:14px;
+      cursor:pointer;
+    }
+    .menu-list li:hover{background:#fff}
+    .logout{
+      margin-top:14px;
+      width:100%;
+      padding:10px;
+      border:none;
+      border-radius:6px;
+      background:#ff4b4b;
+      color:#fff;
+      font-size:14px;
+      cursor:pointer;
+    }
+
+    /* content */
+    .content{
+      flex:1;
+      padding:18px;
+      overflow:auto;
+      background:#fff;
+    }
+    .section{
+      background:#fff;
+      border-radius:10px;
+      border:1px solid #eee;
+      padding:16px;
+      margin-bottom:16px;
+      box-shadow:0 3px 10px rgba(0,0,0,0.03);
+    }
+    .section h2{margin:0 0 8px;font-size:18px}
+    .section p{margin:4px 0 8px;font-size:14px;color:#555}
+
+    .boards{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+    .board{
+      flex:1 1 calc(33% - 8px);
+      min-width:160px;
+      background:linear-gradient(#1b8b3b,#0c6b2e);
+      color:#fff;
+      text-align:center;
+      padding:18px;
+      border-radius:10px;
+      font-size:14px;
+      cursor:pointer;
+      box-shadow:0 6px 18px rgba(27,139,59,0.12);
+    }
+    .board h3{margin:6px 0 0}
+    @media(max-width:700px){
+      .board{flex:1 1 100%}
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      margin-bottom:10px;
+      font-size:14px;
+    }
+    .field label{margin-bottom:4px}
+    .field input,
+    .field select,
+    .field textarea{
+      width:100%;
+      padding:8px;
+      border-radius:6px;
+      border:1px solid #ccc;
+      font-size:14px;
+    }
+    .simple-list{list-style:none;margin:4px 0;padding-left:0;font-size:14px}
+    .simple-list li{margin-bottom:4px}
+    .tag{
+      display:inline-block;
+      padding:2px 6px;
+      border-radius:999px;
+      font-size:11px;
+      background:#e5f6ea;
+      color:var(--accent);
+      margin-left:6px;
+    }
+
+    .btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .btn-pill{
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid #ccc;
+      background:#fff;
+      font-size:13px;
+      cursor:pointer;
+    }
+    .btn-pill.active{
+      background:var(--blue);
+      color:#fff;
+      border-color:var(--blue);
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <button class="hambtn" id="hamb">☰</button>
+    <div class="brand">SC - Dashboard</div>
+  </div>
+
+  <div class="layout">
+    <!-- Sidebar menu -->
+    <aside class="sidebar hidden" id="sidebar">
+      <div class="heading">Menu</div>
+      <ul class="menu-list">
+        <li data-section="profile">1 · Profile</li>
+        <li data-section="status">2 · Status</li>
+        <li data-section="ann">3 · Announcements</li>
+        <li data-section="daily">4 · Daily Exam</li>
+        <li data-section="more">5 · More Options</li>
+      </ul>
+      <button class="logout" id="logoutBtn">Logout</button>
+    </aside>
+
+    <!-- Content -->
+    <main class="content">
+      <div id="homeView" class="section">
+        <h2 id="homeTitle">Welcome, Student</h2>
+        <p>Select an option from the menu or use the quick actions below.</p>
+
+        <div class="boards">
+          <div class="board" data-board="fee">
+            <div>Student Fee</div><h3>Fee</h3>
+          </div>
+          <div class="board" data-board="results">
+            <div>Student Results</div><h3>Results</h3>
+          </div>
+          <div class="board" data-board="tests">
+            <div>Tests</div><h3>Tests</h3>
+          </div>
+        </div>
+      </div>
+
+      <div id="panelView"></div>
+    </main>
+  </div>
+
+  <script>
+    var sidebar   = document.getElementById("sidebar");
+    var hamb      = document.getElementById("hamb");
+    var logoutBtn = document.getElementById("logoutBtn");
+    var homeView  = document.getElementById("homeView");
+    var panel     = document.getElementById("panelView");
+    var homeTitle = document.getElementById("homeTitle");
+    var studentName = "Student";
+
+    // open/close menu
+    hamb.onclick = function(){
+      sidebar.classList.toggle("hidden");
+    };
+
+    // logout -> back to welcome page
+    logoutBtn.onclick = function(){
+      window.location.href = "index.html";
+    };
+
+    // menu items
+    var menuItems = document.querySelectorAll(".menu-list li");
+    for (var i=0;i<menuItems.length;i++){
+      menuItems[i].onclick = function(){
+        sidebar.classList.add("hidden");
+        homeView.style.display = "none";
+        var s = this.getAttribute("data-section");
+        if (s==="profile") renderProfile();
+        else if (s==="status") renderStatus();
+        else if (s==="ann") renderAnnouncements();
+        else if (s==="daily") renderDailyExam();
+        else if (s==="more") renderMoreOptions();
+      };
+    }
+
+    // boards actions (just open empty pages)
+    var boards = document.querySelectorAll(".board");
+    for (var j=0;j<boards.length;j++){
+      boards[j].onclick = function(){
+        sidebar.classList.add("hidden");
+        homeView.style.display="none";
+        var label = this.getAttribute("data-board");
+        var title = (label==="fee")?"Student Fee":(label==="results"?"Student Results":"Tests");
+        panel.innerHTML =
+          '<div class="section"><h2>'+title+'</h2><p>Empty page opened. This area is reserved for future details.</p></div>';
+      };
+    }
+
+    // -------- sections ----------
+    function renderProfile(){
+      panel.innerHTML =
+        '<div class="section">'+
+        '<h2>Profile</h2>'+
+        '<p>Enter your details (simple version, no permanent save).</p>'+
+        '<div class="field"><label>Name</label><input id="nameInput" type="text" placeholder="Enter your name"></div>'+
+        '<div class="field"><label>Age</label><input id="ageInput" type="number" min="1" max="120" placeholder="Enter your age"></div>'+
+        '<div class="field"><label>Gender</label>'+
+        '<select id="genderSelect"><option value="">Select gender</option><option>Male</option><option>Female</option><option>Other</option><option>Prefer not to say</option></select></div>'+
+        '<button class="save-btn" id="saveProfile" style="margin-top:8px;background:var(--accent);color:#fff;border:none;border-radius:6px;padding:8px 14px;">Save (this session)</button>'+
+        '</div>';
+
+      var nameInput = document.getElementById("nameInput");
+      var saveBtn   = document.getElementById("saveProfile");
+      saveBtn.onclick = function(){
+        var val = nameInput.value.trim();
+        if(!val){
+          alert("Please enter your name before saving.");
+          return;
+        }
+        studentName = val;
+        homeTitle.textContent = "Welcome, " + studentName;
+        alert("Saved for now (not permanent).");
+      };
+    }
+
+    function renderStatus(){
+      panel.innerHTML =
+        '<div class="section">'+
+        '<h2>Status</h2>'+
+        '<p>Example status info (you can imagine teacher fills this).</p>'+
+        '<ul class="simple-list">'+
+        '<li>Exams attended: <strong>5</strong></li>'+
+        '<li>Score range: <strong>80% - 90%</strong></li>'+
+        '<li>Last exam: <strong>Unit Test – 85%</strong></li>'+
+        '</ul>'+
+        '<p style="font-size:12px;color:#888;">(Static demo data.)</p>'+
+        '</div>';
+    }
+
+    function renderAnnouncements(){
+      panel.innerHTML =
+        '<div class="section">'+
+        '<h2>Announcements</h2>'+
+        '<p>Demo announcements.</p>'+
+        '<ul class="simple-list">'+
+        '<li>Midterm exam - 15th March<span class="tag">Exam</span></li>'+
+        '<li>Fee due date - 10th March<span class="tag">Fee</span></li>'+
+        '<li>Sports Day - 25th March<span class="tag">Event</span></li>'+
+        '</ul>'+
+        '</div>';
+    }
+
+    function renderDailyExam(){
+      panel.innerHTML =
+        '<div class="section">'+
+        '<h2>Daily Exam</h2>'+
+        '<p>Daily tests will be added by teacher only. (Demo text)</p>'+
+        '</div>';
+    }
+
+    function renderMoreOptions(){
+      panel.innerHTML =
+        '<div class="section">'+
+        '<h2>More Options</h2>'+
+        '<p>Select an option below.</p>'+
+        '<div class="btn-row">'+
+        '<button class="btn-pill" data-more="support">Contact SC Support</button>'+
+        '<button class="btn-pill" data-more="about">Know About App</button>'+
+        '</div>'+
+        '<div id="moreContent" style="margin-top:14px;font-size:14px;"></div>'+
+        '</div>';
+
+      var moreButtons = panel.querySelectorAll("[data-more]");
+      var moreContent = document.getElementById("moreContent");
+
+      for (var k=0;k<moreButtons.length;k++){
+        moreButtons[k].onclick = function(){
+          for (var m=0;m<moreButtons.length;m++){
+            moreButtons[m].classList.remove("active");
+          }
+          this.classList.add("active");
+
+          if (this.getAttribute("data-more")==="support"){
+            var name = studentName || "Student";
+            moreContent.innerHTML =
+              '<p>Hi <strong>'+name+'</strong>, what problem are you facing?</p>'+
+              '<div class="field"><label>Describe your problem</label>'+
+              '<textarea rows="3" placeholder="Type your issue here..."></textarea></div>'+
+              '<p>Contact of teacher:</p>'+
+              '<ul class="simple-list">'+
+              '<li>Teacher Name: <strong>Class Teacher</strong></li>'+
+              '<li>Phone: <strong>+91-XXXXXXXXXX</strong></li>'+
+              '<li>Email: <strong>teacher@example.com</strong></li>'+
+              '</ul>';
+          } else {
+            moreContent.innerHTML =
+              '<p><strong>SC - Student Confirm</strong></p>'+
+              '<p>This app shows dashboard, status, announcements, daily exams and more.</p>'+
+              '<ul class="simple-list">'+
+              '<li>Created by: <strong>SC Creator</strong></li>'+
+              '<li>Purpose: <strong>Student info & updates</strong></li>'+
+              '<li>Version: <strong>1.0 (demo)</strong></li>'+
+              '</ul>';
+          }
+        };
+      }
+    }
+  </script>
+</body>
+</html>
